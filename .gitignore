@@ -1,8 +1,15 @@
 # Compiled class file
 *.class
+target/
 
 # Log file
 *.log
+
+# Eclipse
+.classpath
+.project
+.settings/
+.tern-project
 
 # BlueJ files
 *.ctxt
