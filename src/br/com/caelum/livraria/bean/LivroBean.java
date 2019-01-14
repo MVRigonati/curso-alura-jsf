@@ -1,6 +1,5 @@
 package br.com.caelum.livraria.bean;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -50,6 +49,14 @@ public class LivroBean {
 		new DAO<Livro>(Livro.class).remove(toRemove);
 	}
 	
+	public void editar(Livro toEdit) {
+		this.livro = new DAO<Livro>(Livro.class).buscaPorId(toEdit.getId());
+	}
+	
+	public void removerAutor(Autor toRemove) {
+		this.livro.removerAutor(toRemove);
+	}
+	
 	public void associaAutor() {
 		Autor autor = new DAO<Autor>(Autor.class).buscaPorId(this.autorId);
 		this.livro.adicionaAutor(autor);
@@ -62,8 +69,16 @@ public class LivroBean {
 		if (livro.getAutores().isEmpty()) {
 			FacesContext.getCurrentInstance().addMessage("autor", new FacesMessage("Livro deve ter pelo menos um Autor."));
 		} else {
-			new DAO<Livro>(Livro.class).adiciona(this.livro);
+			
+			if (this.livro.getId() == null) {
+				new DAO<Livro>(Livro.class).adiciona(this.livro);
+			} else {
+				new DAO<Livro>(Livro.class).atualiza(this.livro);
+			}
+			
 		}
+		
+		this.livro = new Livro();
 		
 	}
 	

@@ -10,8 +10,8 @@
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>*.xhtml</url-pattern>
   </servlet-mapping>
-  <context-param> <!-- https://www.mkyong.com/jsf2/how-to-use-comments-in-jsf-2-0/ -->
-    <param-name>facelets.SKIP_COMMENTS</param-name>
+  <context-param> <!-- https://stackoverflow.com/questions/3500738/invisible-comments-in-jsf-2-0 -->
+    <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
     <param-value>true</param-value>
   </context-param>
 </web-app>

@@ -70,6 +70,9 @@
 					<h:column>
 						<h:outputText value="#{autor.nome}" />
 					</h:column>
+					<h:column>
+						<h:commandLink value="Remover do Livro" action="#{livroBean.removerAutor(autor)}" />
+					</h:column>
 				</h:dataTable>
 				
 			</fieldset>
@@ -100,7 +103,11 @@
 					<h:outputText value="#{livro.preco}" />
 				</h:column>
 				<h:column>
-					<f:facet name="header">Remover</f:facet>
+					<f:facet name="header">Edição</f:facet>
+					<h:commandLink value="Alterar Livro" action="#{livroBean.editar(livro)}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">Remoção</f:facet>
 					<h:commandLink value="Remover Livro" action="#{livroBean.remover(livro)}" />
 				</h:column>
 			</h:dataTable>
