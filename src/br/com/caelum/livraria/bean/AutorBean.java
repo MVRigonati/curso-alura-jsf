@@ -49,4 +49,8 @@ public class AutorBean {
 		return "livro?faces-redirect=true";
 	}
 	
+	public void loadById() {
+		this.autor = new DAO<Autor>(Autor.class).buscaPorId(this.autor.getId());
+	}
+	
 }
