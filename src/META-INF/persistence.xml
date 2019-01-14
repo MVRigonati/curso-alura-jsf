@@ -8,6 +8,7 @@
     <persistence-unit name="livraria">
 
         <!-- Aqui são listadas todas as entidades -->
+        <class>br.com.caelum.livraria.model.Usuario</class>
         <class>br.com.caelum.livraria.model.Livro</class>
 		<class>br.com.caelum.livraria.model.Autor</class>
 

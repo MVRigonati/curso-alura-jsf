@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 
 import br.com.caelum.livraria.model.Autor;
 import br.com.caelum.livraria.model.Livro;
+import br.com.caelum.livraria.model.Usuario;
 
 public class PopulaBanco {
 
