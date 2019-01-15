@@ -20,7 +20,7 @@
 				<h:panelGrid columns="2"> <!-- columns é a quantidade de colunas (componentes) que será aceita por linha -->
 					
 					<h:outputLabel value="Titulo:" for="titulo"/>
-					<h:inputText id="titulo" value="#{livroBean.livro.titulo}" required="true"
+					<h:inputText id="titulo" value="#{livroBean.livro.titulo}" required="true" maxlength="40"
 						requiredMessage="Título é obrigatório." validatorMessage="Tamanho máximo de 40 caracteres para o campo Título">
 						<f:validateLength maximum="40" /> <!-- Exemplo de validação já existente no JSF -->
 						<f:ajax event="blur" render="messages" />
@@ -65,13 +65,13 @@
 				<h:commandLink value="Cadastrar Novo Autor" action="#{livroBean.goToCadastroAutor()}"
 					immediate="true" style="margin-left: 10px;" />
 				
-				<!-- Tudo que está dentro do dataTable será executado uma vez para cada item da lista -->
+				<!-- Tudo que está dentro do dataTable será mostrado uma vez para cada item da lista -->
 				<h:dataTable id="autoresAssociados" value="#{livroBean.livro.autores}" var="autor">
 					<h:column>
 						<h:outputText value="#{autor.nome}" />
 					</h:column>
 					<h:column>
-						<h:commandLink value="Remover do Livro" action="#{livroBean.removerAutor(autor)}" />
+						<h:commandLink value="Remover do Livro" action="#{livroBean.removerAutor(autor)}" immediate="true" />
 					</h:column>
 				</h:dataTable>
 				
@@ -108,7 +108,9 @@
 				</h:column>
 				<h:column>
 					<f:facet name="header">Remoção</f:facet>
-					<h:commandLink value="Remover Livro" action="#{livroBean.remover(livro)}" />
+					<h:commandLink value="Remover Livro" action="#{livroBean.remover(livro)}">
+						<f:ajax render="@form" />
+					</h:commandLink>
 				</h:column>
 			</h:dataTable>
 		</h:form>
