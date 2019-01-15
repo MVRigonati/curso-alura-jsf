@@ -12,6 +12,22 @@ public class UserDAO extends DAO<Usuario> {
 		super(Usuario.class);
 	}
 	
+	public Usuario getUserBy(String email, String password) {
+		
+		EntityManager em = new JPAUtil().getEntityManager();
+		
+		TypedQuery<Usuario> findUserQuery = em.createNamedQuery("User.findUser", Usuario.class);
+		
+		findUserQuery.setParameter("pEmail", email);
+		findUserQuery.setParameter("pPassword", password);
+		
+		Usuario result = tryToGetUser(findUserQuery);
+		em.close();
+		
+		return result;
+		
+	}
+	
 	public boolean userExists(Usuario user) {
 		
 		EntityManager em = new JPAUtil().getEntityManager();
@@ -36,6 +52,16 @@ public class UserDAO extends DAO<Usuario> {
 			return false;
 		}
 		return true;
+		
+	}
+	
+	private Usuario tryToGetUser(TypedQuery<Usuario> findUserQuery) {
+		
+		try {
+			return findUserQuery.getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
+		}
 		
 	}
 
