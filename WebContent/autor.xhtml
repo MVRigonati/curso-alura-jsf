@@ -3,10 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 	<ui:composition template="/_headerTemplate.xhtml">
-		<ui:define name="titulo">Novo Autor</ui:define>
+		<ui:define name="titulo">
+			<p:outputPanel>Novo Autor</p:outputPanel>
+		</ui:define>
 		
 		<f:metadata>
 			<f:viewParam name="autorId" value="#{autorBean.autor.id}" />
@@ -15,40 +18,43 @@
 		
 		<ui:define name="conteudo">
 			
-			<h:form>
-				<h:messages id="messages" style="color: red;"/>
-				<fieldset>
-					<legend>Dados do Autor</legend>
+			<h:form id="autorDataForm">
+				<p:messages id="messages" style="color: red;"/>
+				<p:fieldset legend="Dados do Autor">
 					<h:panelGrid columns="2">
-						<h:outputLabel value="Nome:" for="nome" />
-						<h:inputText id="nome" value="#{autorBean.autor.nome}" required="true" requiredMessage="Digite um nome." />
+						<p:outputLabel value="Nome:" for="nome" />
+						<p:inputText id="nome" value="#{autorBean.autor.nome}" required="true"
+							requiredMessage="Digite um nome." validatorMessage="Nome Inválido, mínimo de 5 caracteres.">
+							<f:validateLength minimum="5" />
+							<f:ajax event="blur" render="messages" />
+						</p:inputText>
 						
-						<h:outputLabel value="E-mail:" for="email" />
-						<h:inputText id="email" value="#{autorBean.autor.email}" required="true" requiredMessage="Digite um email.">
-							<f:passThroughAttribute name="type" value="email" />
-						</h:inputText>
+						<p:outputLabel value="E-mail:" for="email" />
+						<p:inputText id="email" value="#{autorBean.autor.email}" required="true"
+							requiredMessage="Digite um email." validatorMessage="Email Inválido.">
+							<f:attribute name="type" value="email" />
+							<f:validateRegex pattern=".+@.+" />
+						</p:inputText>
 						
-						<h:commandButton value="Gravar" action="#{autorBean.gravar}" />
+						<p:commandButton value="Gravar" action="#{autorBean.gravar}" process="@form" update="@form autoresListForm" />
 						<h:commandLink value="Cadastrar Livro" action="#{autorBean.goToCadastroLivro()}" style="margin-left: 5px" immediate="true" />
 					</h:panelGrid>
-				</fieldset>
+				</p:fieldset>
 			</h:form>
 			
-			<h:form>
-				<h:dataTable id="autoresTable" value="#{autorBean.listAll()}" var="autor">
-					<h:column>
-						<f:facet name="header">Nome</f:facet>
-						<h:outputText value="#{autor.nome}" />
-					</h:column>
-					<h:column>
-						<f:facet name="header">Edição</f:facet>
-						<h:commandLink value="Editar" action="#{autorBean.editar(autor)}" />
-					</h:column>
-					<h:column>
-						<f:facet name="header">Remoção</f:facet>
-						<h:commandLink value="Remover do Sistema" action="#{autorBean.remover(autor)}" />
-					</h:column>
-				</h:dataTable>
+			<h:form id="autoresListForm">
+				<!-- https://www.primefaces.org/showcase/ui/data/dataList.xhtml -->
+				<p:dataList id="autoresListTable" value="#{autorBean.listAll()}" var="autor" type="definition">
+					
+					<f:facet name="header">Nome</f:facet>
+					<p:commandLink value="Editar" action="#{autorBean.editar(autor)}" update="autorDataForm"
+						styleClass="ui-icon ui-icon-pencil" style="float:left;margin-right:10px;margin-top:3px; color:#333333" />
+					<p:commandLink value="Remover do Sistema" action="#{autorBean.remover(autor)}" update="@form"
+						styleClass="ui-icon ui-icon-trash" style="float:left;margin-right:10px;margin-top:3px; color:#333333" />
+						
+					#{autor.nome} - #{autor.email}
+					
+				</p:dataList>
 			</h:form>
 		</ui:define>
 	</ui:composition>
