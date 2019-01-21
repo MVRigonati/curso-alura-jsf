@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 	<ui:composition template="/_headerTemplate.xhtml">
@@ -11,21 +12,21 @@
 		<ui:define name="conteudo">
 			
 			<h:form>
-				<h:messages id="messages" style="color: red;"/>
-				<fieldset>
-					<legend>Login</legend>
+				<p:messages id="messages" style="color: red;"/>
+				<p:fieldset legend="Login" >
 					<h:panelGrid columns="2">
-						<h:outputLabel value="E-mail:" for="email" />
-						<h:inputText id="email" value="#{loginBean.user.email}" required="true" requiredMessage="Digite um e-mail.">
+						<p:outputLabel value="E-mail:" for="email" />
+						<p:inputText id="email" value="#{loginBean.user.email}" required="true" requiredMessage="Digite um e-mail.">
 							<f:passThroughAttribute name="type" value="email" />
-						</h:inputText>
+						</p:inputText>
 						
-						<h:outputLabel value="Senha:" for="password" />
-						<h:inputSecret id="password" value="#{loginBean.user.password}" required="true" requiredMessage="Digite uma senha." />
+						<p:outputLabel value="Senha:" for="password" />
+						<p:password id="password" value="#{loginBean.user.password}" feedback="true"
+							required="true" requiredMessage="Digite uma senha." />
 						
-						<h:commandButton value="Entrar" action="#{loginBean.login}" />
+						<p:commandButton value="Entrar" action="#{loginBean.login}" process="@form" update="@form" />
 					</h:panelGrid>
-				</fieldset>
+				</p:fieldset>
 			</h:form>
 			
 		</ui:define>
