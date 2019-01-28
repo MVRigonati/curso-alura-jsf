@@ -19,6 +19,7 @@ public class LivroBean {
 	
 	private Livro livro = new Livro();
 	private Integer autorId;
+	private List<Livro> livros;
 	
 	public Integer getAutorId() {
 		return autorId;
@@ -42,15 +43,22 @@ public class LivroBean {
 	}
 	
 	public List<Livro> listAllLivros() {
-		return new DAO<Livro>(Livro.class).listaTodos();
+		
+		if (this.livros == null) {
+			atualizaListaLivros();
+		}
+		return this.livros;
+		
 	}
 	
 	public void remover(Livro toRemove) {
 		new DAO<Livro>(Livro.class).remove(toRemove);
+		atualizaListaLivros();
 	}
 	
 	public void editar(Livro toEdit) {
 		this.livro = new DAO<Livro>(Livro.class).buscaPorId(toEdit.getId());
+		atualizaListaLivros();
 	}
 	
 	public void removerAutor(Autor toRemove) {
@@ -70,11 +78,13 @@ public class LivroBean {
 			FacesContext.getCurrentInstance().addMessage("autor", new FacesMessage("Livro deve ter pelo menos um Autor."));
 		} else {
 			
+			DAO<Livro> livroDAO = new DAO<Livro>(Livro.class);
 			if (this.livro.getId() == null) {
-				new DAO<Livro>(Livro.class).adiciona(this.livro);
+				livroDAO.adiciona(this.livro);
 			} else {
-				new DAO<Livro>(Livro.class).atualiza(this.livro);
+				livroDAO.atualiza(this.livro);
 			}
+			atualizaListaLivros();
 			
 		}
 		
@@ -82,6 +92,10 @@ public class LivroBean {
 		
 	}
 	
+	private void atualizaListaLivros() {
+		this.livros = new DAO<Livro>(Livro.class).listaTodos();
+	}
+
 	public void beginsWithOne(FacesContext context, UIComponent component, Object value) throws ValidatorException {
 		
 		String valor = value.toString();

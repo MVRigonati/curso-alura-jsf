@@ -11,7 +11,7 @@
 		<ui:define name="titulo">Novo Livro</ui:define>
 	
 		<ui:define name="conteudo">
-		<h:form>
+		<h:form id="dadosLivroForm">
 			
 			<!-- Mostra as mensagens de validação de todos os componentes -->
 			<p:messages id="messages" style="color: red;"/>
@@ -63,7 +63,7 @@
 						<h:outputText value="#{autor.nome}" />
 					</p:column>
 					<p:column>
-						<p:commandLink value="Remover do Livro" action="#{livroBean.removerAutor(autor)}" immediate="true" update="autoresAssociados" process="@this"
+						<p:commandLink action="#{livroBean.removerAutor(autor)}" immediate="true" update="autoresAssociados" process="@this"
 							styleClass="ui-icon ui-icon-trash" style="float:left;margin-right:10px;margin-top:3px; color:#333333" />
 					</p:column>
 				</p:dataTable>
@@ -77,30 +77,30 @@
 		</h:form>
 		
 		<h:form id="vizualizaLivros">
-			<h:dataTable id="listaLivros" value="#{livroBean.listAllLivros()}" var="livro" style="margin-top: 20px; text-align: center;">
-				<h:column>
-					<f:facet name="header">Título</f:facet> <!-- Defini o título da coluna -->
+			<p:dataTable id="listaLivros" value="#{livroBean.listAllLivros()}" var="livro"
+				paginator="true" rows="5" style="margin-top: 20px; text-align: center;">
+				
+				<f:facet name="header">Livros Cadastrados</f:facet> <!-- Defini o título da tabela -->
+				<p:column headerText="Titulo" sortBy="#{livro.titulo}" filterBy="#{livro.titulo}" filterMatchMode="contains">
 					<h:outputText value="#{livro.titulo}" />
-				</h:column>
-				<h:column>
-					<f:facet name="header">ISBN</f:facet>
+				</p:column>
+				
+				<p:column headerText="ISBN" sortBy="#{livro.isbn}" filterBy="#{livro.isbn}" filterMatchMode="startsWith">
 					<h:outputText value="#{livro.isbn}" />
-				</h:column>
-				<h:column>
-					<f:facet name="header">Preço</f:facet>
+				</p:column>
+				
+				<p:column headerText="Preço" sortBy="#{livro.preco}">
 					<h:outputText value="#{livro.preco}" />
-				</h:column>
-				<h:column>
-					<f:facet name="header">Edição</f:facet>
-					<p:commandLink value="Alterar Livro" action="#{livroBean.editar(livro)}" />
-				</h:column>
-				<h:column>
-					<f:facet name="header">Remoção</f:facet>
-					<p:commandLink value="Remover Livro" action="#{livroBean.remover(livro)}">
-						<f:ajax render="@form" />
-					</p:commandLink>
-				</h:column>
-			</h:dataTable>
+				</p:column>
+				
+				<p:column headerText="Ações">
+					<p:commandLink action="#{livroBean.editar(livro)}" update="@form dadosLivroForm"
+						styleClass="ui-icon ui-icon-pencil" style="float:left;margin-right:10px;margin-top:3px; color:#333333" />
+					<p:commandLink action="#{livroBean.remover(livro)}" update="@form"
+						styleClass="ui-icon ui-icon-trash" style="float:left;margin-right:10px;margin-top:3px; color:#333333"/>
+				</p:column>
+				
+			</p:dataTable>
 		</h:form>
 		</ui:define>
 	
