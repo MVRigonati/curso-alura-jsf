@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 	
 	<ui:composition template="/_headerTemplate.xhtml">
@@ -13,78 +14,65 @@
 		<h:form>
 			
 			<!-- Mostra as mensagens de validação de todos os componentes -->
-			<h:messages id="messages" style="color: red;"/>
+			<p:messages id="messages" style="color: red;"/>
 			
-			<fieldset> <!-- Define uma marcação em volta -->
-				<legend>Dados do Livro</legend> <!-- Dá o nome à marcação -->
+			<p:fieldset legend="Dados do Livro"> <!-- Define uma marcação em volta -->
 				<h:panelGrid columns="2"> <!-- columns é a quantidade de colunas (componentes) que será aceita por linha -->
 					
-					<h:outputLabel value="Titulo:" for="titulo"/>
-					<h:inputText id="titulo" value="#{livroBean.livro.titulo}" required="true" maxlength="40"
+					<p:outputLabel value="Titulo:" for="titulo"/>
+					<p:inputText id="titulo" value="#{livroBean.livro.titulo}" required="true" maxlength="40"
 						requiredMessage="Título é obrigatório." validatorMessage="Tamanho máximo de 40 caracteres para o campo Título">
 						<f:validateLength maximum="40" /> <!-- Exemplo de validação já existente no JSF -->
 						<f:ajax event="blur" render="messages" />
-					</h:inputText>
+					</p:inputText>
 						
-					<h:outputLabel value="ISBN:" for="isbn"/>
-					<h:inputText id="isbn" value="#{livroBean.livro.isbn}" validator="#{livroBean.beginsWithOne}" />
+					<p:outputLabel value="ISBN:" for="isbn"/>
+					<p:inputMask id="isbn" value="#{livroBean.livro.isbn}" validator="#{livroBean.beginsWithOne}" mask="999-9-99-999999-9" />
 					<!-- Exemplo de validação personalizada -->
 					
-					<h:outputLabel value="Preço:" for="preco"/>
-					<h:inputText id="preco" value="#{livroBean.livro.preco}" />
+					<p:outputLabel value="Preço:" for="preco"/>
+					<p:inputText id="preco" value="#{livroBean.livro.preco}" />
 					
-					<h:outputLabel value="Data de Lançamento:" for="dtLancamento"/>
-					<h:inputText id="dtLancamento" value="#{livroBean.livro.dataLancamento.time}">
-						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
-						<!-- Para data é necessário definir o formato -->
-					</h:inputText>
+					<p:outputLabel value="Data de Lançamento:" for="dtLancamento"/>
+					<p:calendar id="dtLancamento" value="#{livroBean.livro.dataLancamento.time}"
+						pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" mask="true"/>
 					
 				</h:panelGrid>
-			</fieldset>
+			</p:fieldset>
 			
-			<fieldset>
-				<legend>Dados do Autor</legend>
+			<p:fieldset legend="Dados do Autor">
 				
-				<h:outputLabel for="autor" style="padding-right: 5px;"
-					value="Selecione Autor:" />
-				<h:selectOneMenu id="autor" value="#{livroBean.autorId}">
-					<f:selectItems value="#{livroBean.autores}" var="autor"
-						itemLabel="#{autor.nome}" itemValue="#{autor.id}" />
-				</h:selectOneMenu>
-				
-				<h:commandButton value="Associar Autor" action="#{livroBean.associaAutor()}" style="margin-left: 15px;">
-					<f:ajax execute="autor" render="autoresAssociados" />
-					<!-- "execute" diz o que será enviado na requisição AJAX -->
-					<!-- "render" atualiza componentes -->
-				</h:commandButton>
-				
-				<!-- 
-					"immediate" altera o ciclo de vida das requisições, fazendo com que
-					o processamento seja realizado antes de qualquer validação
-				-->
-				<h:commandLink value="Cadastrar Novo Autor" action="#{livroBean.goToCadastroAutor()}"
-					immediate="true" style="margin-left: 10px;" />
+				<p:panelGrid columns="4">
+					<p:outputLabel for="autor" style="padding-right: 5px;"
+						value="Selecione Autor:" />
+					<p:selectOneMenu id="autor" value="#{livroBean.autorId}">
+						<f:selectItems value="#{livroBean.autores}" var="autor"
+							itemLabel="#{autor.nome}" itemValue="#{autor.id}" />
+					</p:selectOneMenu>
+					
+					<p:commandButton value="Associar Autor" action="#{livroBean.associaAutor()}" style="margin-left: 15px;"
+						process="@this autor" update="autoresAssociados" />
+					
+					<p:commandLink value="Cadastrar Novo Autor" action="#{livroBean.goToCadastroAutor()}"
+						immediate="true" style="margin-left: 10px;" update="@all" />
+				</p:panelGrid>
 				
 				<!-- Tudo que está dentro do dataTable será mostrado uma vez para cada item da lista -->
-				<h:dataTable id="autoresAssociados" value="#{livroBean.livro.autores}" var="autor">
-					<h:column>
+				<p:dataTable id="autoresAssociados" value="#{livroBean.livro.autores}" var="autor" emptyMessage="Nenhum Autor">
+					<p:column>
 						<h:outputText value="#{autor.nome}" />
-					</h:column>
-					<h:column>
-						<h:commandLink value="Remover do Livro" action="#{livroBean.removerAutor(autor)}" immediate="true" />
-					</h:column>
-				</h:dataTable>
+					</p:column>
+					<p:column>
+						<p:commandLink value="Remover do Livro" action="#{livroBean.removerAutor(autor)}" immediate="true" update="autoresAssociados" process="@this"
+							styleClass="ui-icon ui-icon-trash" style="float:left;margin-right:10px;margin-top:3px; color:#333333" />
+					</p:column>
+				</p:dataTable>
 				
-			</fieldset>
+			</p:fieldset>
 			
 			<!-- Botão para associar um autor ao livro que está sendo adicionado -->
-			<h:commandButton value="Gravar" action="#{livroBean.gravar()}" style="margin-top: 15px;">
-				<f:ajax execute="@form" render="@form :vizualizaLivros:listaLivros" />
-				<!--
-					":listaLivros" pois como o determinado componente está fora do escopo atual (h:form),
-					é necessário utilizar seu caminho absoluto
-				-->
-			</h:commandButton>
+			<p:commandButton value="Gravar" action="#{livroBean.gravar()}" style="margin-top: 15px;"
+				process="@form" update="@form :vizualizaLivros:listaLivros" />
 			
 		</h:form>
 		
@@ -104,13 +92,13 @@
 				</h:column>
 				<h:column>
 					<f:facet name="header">Edição</f:facet>
-					<h:commandLink value="Alterar Livro" action="#{livroBean.editar(livro)}" />
+					<p:commandLink value="Alterar Livro" action="#{livroBean.editar(livro)}" />
 				</h:column>
 				<h:column>
 					<f:facet name="header">Remoção</f:facet>
-					<h:commandLink value="Remover Livro" action="#{livroBean.remover(livro)}">
+					<p:commandLink value="Remover Livro" action="#{livroBean.remover(livro)}">
 						<f:ajax render="@form" />
-					</h:commandLink>
+					</p:commandLink>
 				</h:column>
 			</h:dataTable>
 		</h:form>
