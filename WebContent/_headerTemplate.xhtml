@@ -30,13 +30,12 @@
 		    
 			<h:form rendered="#{user != null}">
 			 	<!-- https://www.primefaces.org/showcase/ui/menu/menuButton.xhtml -->
-			    <p:menuButton value="Menu">
+			    <p:menubar>
 			        <p:menuitem value="Livros" action="livro?faces-redirect=true" icon="ui-icon-bookmark" /> <!-- jQuery icons -->
 			        <p:menuitem value="Autores" action="autor?faces-redirect=true" icon="ui-icon-person" />
 			        <p:menuitem value="Vendas" action="vendas?faces-redirect=true" icon="ui-icon-image" />
-			        <p:separator />
-			        <p:menuitem value="Logout" action="#{loginBean.logout()}" icon="ui-icon-home" />
-			    </p:menuButton>
+		        	<p:menuitem value="Logout" action="#{loginBean.logout()}" icon="ui-icon-home" />
+			    </p:menubar>
 			</h:form>
 			
 			<h1><ui:insert name="titulo"></ui:insert></h1>
