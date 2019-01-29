@@ -11,7 +11,19 @@
 	<h:body>
 	
 		<div id="cabecalho">
-			<h:graphicImage library="img" name="logo.png" />
+		
+			<h:panelGrid columns="2">
+				<h:graphicImage library="img" name="logo.png" />
+				
+				<h:form>
+					<p:themeSwitcher id="themeSwitch" rendered="#{user != null}" value="#{themeBean.theme}"
+						style="width:165px; position: absolute; right: 10px;">
+			            <f:selectItem itemLabel="Choose Theme" itemValue="" />
+			            <f:selectItems value="#{themeBean.allThemes()}" var="theme" itemLabel="#{theme}" itemValue="#{theme}" />
+			            <f:ajax />
+			        </p:themeSwitcher>
+	        	</h:form>
+        	</h:panelGrid>
 			
 			<!-- Mostra um popup com as mensagens de validação e etc -->
 		    <p:growl id="messages" showDetail="true" autoUpdate="true" />
@@ -19,10 +31,10 @@
 			<h:form rendered="#{user != null}">
 			 	<!-- https://www.primefaces.org/showcase/ui/menu/menuButton.xhtml -->
 			    <p:menuButton value="Menu">
-			        <p:menuitem value="Livros" action="livro?faces-redirect=true" icon="pi pi-save"/>
-			        <p:menuitem value="Autores" action="autor?faces-redirect=true" icon="pi pi-refresh"/>
+			        <p:menuitem value="Livros" action="livro?faces-redirect=true" icon="ui-icon-bookmark" /> <!-- jQuery icons -->
+			        <p:menuitem value="Autores" action="autor?faces-redirect=true" icon="ui-icon-person" />
 			        <p:separator />
-			        <p:menuitem value="Logout" action="#{loginBean.logout()}" icon="pi pi-home"/>
+			        <p:menuitem value="Logout" action="#{loginBean.logout()}" icon="ui-icon-home" />
 			    </p:menuButton>
 			</h:form>
 			
